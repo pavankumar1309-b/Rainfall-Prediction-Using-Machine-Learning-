@@ -1,0 +1,53 @@
+from zipfile import ZipFile
+import os
+
+# Directory structure for the GitHub repo
+structure = {
+    "rainfall-prediction-ml/": [
+        "README.md",
+        "requirements.txt",
+        ".gitignore",
+        "LICENSE"
+    ],
+    "rainfall-prediction-ml/data/": [],
+    "rainfall-prediction-ml/notebooks/": [
+        "01_EDA.ipynb",
+        "02_Model_Training.ipynb",
+        "03_Prediction_Demo.ipynb"
+    ],
+    "rainfall-prediction-ml/models/": [],
+    "rainfall-prediction-ml/src/": [
+        "__init__.py",
+        "config.py",
+        "preprocess.py",
+        "train.py",
+        "predict.py"
+    ],
+    "rainfall-prediction-ml/app/": [
+        "streamlit_app.py"
+    ]
+}
+
+# Create the directory structure in memory and add dummy content
+zip_filename = "rainfall-prediction-ml.zip"
+with ZipFile(zip_filename, 'w') as zipf:
+    for folder, files in structure.items():
+        for file in files:
+            path = folder + file
+            content = f"# {file.replace('.py', '').replace('.ipynb', '').replace('_', ' ').title()}\n"
+            if file.endswith(".py"):
+                content += "\n# This is a placeholder Python script."
+            elif file.endswith(".ipynb"):
+                content = "{\n \"cells\": [],\n \"metadata\": {},\n \"nbformat\": 4,\n \"nbformat_minor\": 2\n}"
+            elif file == "README.md":
+                content = "# Rainfall Prediction Using Machine Learning\n\nThis is a starter template for the project."
+            elif file == "requirements.txt":
+                content = "pandas\nnumpy\nscikit-learn\nxgboost\nmatplotlib\nseaborn\nstreamlit\njoblib"
+            elif file == ".gitignore":
+                content = "__pycache__/\n*.pkl\n*.ipynb_checkpoints/\n"
+            elif file == "LICENSE":
+                content = "MIT License\n\nPermission is hereby granted, free of charge, to any person obtaining a copy..."
+
+            zipf.writestr(path, content)
+
+print(f"Project zip created: {zip_filename}")
